@@ -1,0 +1,77 @@
+class Proposition:
+    def __init__(self, name, truth_value=None):
+        self.name = name
+        self.truth_value = truth_value
+
+    def evaluate(self):
+        return self.truth_value
+
+    def __repr__(self):
+        return self.name
+
+class Not:
+    def __init__(self, operand):
+        self.operand = operand
+
+    def evaluate(self):
+        return not self.operand.evaluate()
+
+    def __repr__(self):
+        return f"¬{self.operand}"
+
+class And:
+    def __init__(self, operand1, operand2):
+        self.operand1 = operand1
+        self.operand2 = operand2
+
+    def evaluate(self):
+        return self.operand1.evaluate() and self.operand2.evaluate()
+
+    def __repr__(self):
+        return f"({self.operand1} ∧ {self.operand2})"
+
+class Or:
+    def __init__(self, operand1, operand2):
+        self.operand1 = operand1
+        self.operand2 = operand2
+
+    def evaluate(self):
+        return self.operand1.evaluate() or self.operand2.evaluate()
+
+    def __repr__(self):
+        return f"({self.operand1} ∨ {self.operand2})"
+
+class Implies:
+    def __init__(self, antecedent, consequent):
+        self.antecedent = antecedent
+        self.consequent = consequent
+
+    def evaluate(self):
+        # P -> Q is equivalent to ¬P ∨ Q
+        return not self.antecedent.evaluate() or self.consequent.evaluate()
+
+    def __repr__(self):
+        return f"({self.antecedent} → {self.consequent})"
+
+# Example Usage:
+# Define atomic propositions
+P = Proposition("P", True)
+Q = Proposition("Q", False)
+R = Proposition("R", True)
+
+# Create compound propositions
+expr1 = And(P, Q) # P AND Q
+expr2 = Or(Not(P), R) # NOT P OR R
+expr3 = Implies(expr1, expr2) # (P AND Q) IMPLIES (NOT P OR R)
+
+print(f"Expression 1: {expr1} = {expr1.evaluate()}")
+print(f"Expression 2: {expr2} = {expr2.evaluate()}")
+print(f"Expression 3: {expr3} = {expr3.evaluate()}")
+
+# Change truth values and re-evaluate
+P.truth_value = False
+Q.truth_value = True
+print(f"\nAfter changing P and Q:")
+print(f"Expression 1: {expr1} = {expr1.evaluate()}")
+print(f"Expression 2: {expr2} = {expr2.evaluate()}")
+print(f"Expression 3: {expr3} = {expr3.evaluate()}")
